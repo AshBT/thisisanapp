@@ -1,4 +1,10 @@
 Randomapp::Application.routes.draw do
+  resources :nodes
+
+
+  resources :links
+
+
   resources :events
 
 

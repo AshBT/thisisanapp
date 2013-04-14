@@ -2,23 +2,7 @@ class EventsController < ApplicationController
   # GET /events
   # GET /events.json
   def index
-    @events = Event.all
-    @nodes = Event.all
-
-    while @nodes.count > 0 do
-      hash = {}
-      links_hash = {}
-      node1 = @nodes.pop()
-      node2 = @nodes.pop()
-      hash["nodes"] = node1
-      hash["nodes"] = node2
-      links_hash["source"] = node2.id
-      links_hash["target"] = node1.id
-      hash["links"] = [links_hash]
-      @hash = hash
-    end
-
-    asdfasdfl;kj
+    @events = Event.limit(10)
 
     respond_to do |format|
       format.html # index.html.erb

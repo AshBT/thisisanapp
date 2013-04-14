@@ -1,27 +1,29 @@
 Randomapp::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
-  set_trace_func proc { |event, file, line, id, classname| if event != "c-call" && event != "c-return" && event != "line" && file =~ /(app\/.*)/
+  set_trace_func proc { |event, file, line, id, classname, binding| if event != "c-call" && event != "c-return" && event != "line" && file =~ /(app\/.*)/
     @event = "#{event}"
     @file = "#{file}"
     @line = "#{line}"
-    @classname = "#{classname}"
+    @classname = "#{classname.methods}"
     @id = "#{id}"
+    @binding = "#{binding}"
     
-    a = {"event" => @event, "file" => @file, "line" => @line, "classname" => @classname, "id" => @id}
+    a = {"event" => @event, "file" => @file, "line" => @line, "classname" => @classname, "id" => @id, "binding" => @binding}
+    puts a
 
-    puts Time.now, a
+    #generate the nodeshash here --- to be rendered as an object in the dataset database
+
+    Node.create(:source => @binding, :target => @file)
 
     Event.create(:event_name => @event, 
                   :file => @file, 
                   :line => @line,
                   :classname => @classname)
 
-    # puts @event
-    # puts @file
-    # puts @classname   ## clea
-    # puts @line
-    # puts @id
+    nodes_file = Node.all
+    nodes_file
+
   end }
 
   # counter = Event.count
