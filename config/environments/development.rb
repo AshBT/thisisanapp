@@ -1,6 +1,43 @@
 Randomapp::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
+  set_trace_func proc { |event, file, line, id, classname| if event != "c-call" && event != "c-return" && event != "line" && file =~ /(app\/.*)/
+    @event = "#{event}"
+    @file = "#{file}"
+    @line = "#{line}"
+    @classname = "#{classname}"
+    @id = "#{id}"
+    
+    a = {"event" => @event, "file" => @file, "line" => @line, "classname" => @classname, "id" => @id}
+
+    puts Time.now, a
+
+    Event.create(:event_name => @event, 
+                  :file => @file, 
+                  :line => @line,
+                  :classname => @classname)
+
+    # puts @event
+    # puts @file
+    # puts @classname   ## clea
+    # puts @line
+    # puts @id
+  end }
+
+  # counter = Event.count
+  # links_array = []
+
+  # while counter > 0 do
+  #   link1 = Event.find(counter)
+  #   counter -= 1
+  #   link2 = Event.find(counter)
+  #   links_array.push(link1, link2)
+  # end
+
+  # puts links_array
+
+
+
   # In the development environment your application's code is reloaded on
   # every request. This slows down response time but is perfect for development
   # since you don't have to restart the web server when you make code changes.

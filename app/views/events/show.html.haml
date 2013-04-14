@@ -1,0 +1,21 @@
+%p#notice= notice
+
+%p
+  %b Event name:
+  = @event.event_name
+%p
+  %b File:
+  = @event.file
+%p
+  %b Line:
+  = @event.line
+%p
+  %b Classname:
+  = @event.classname
+%p
+  %b Id:
+  = @event.id
+
+= link_to 'Edit', edit_event_path(@event)
+\|
+= link_to 'Back', events_path
