@@ -18,6 +18,8 @@ class EventsController < ApplicationController
       @hash = hash
     end
 
+    asdfasdfl;kj
+
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @events }
