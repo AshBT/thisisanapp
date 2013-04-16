@@ -9,7 +9,7 @@ class NodesController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: {"nodes".to_s => @nodes, "links".to_s => @links}}
+      format.json { render json: {"nodes" => @nodes, "links" => @links}}
       #format.csv { render :layout => false }
     end
   end

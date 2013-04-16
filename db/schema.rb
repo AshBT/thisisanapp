@@ -35,8 +35,8 @@ ActiveRecord::Schema.define(:version => 20130414153033) do
   end
 
   create_table "nodes", :force => true do |t|
-    t.string   "source", :null => "source"
-    t.string   "target", :null => "source"
+    t.string   "source"
+    t.string   "target"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end

@@ -8,16 +8,14 @@
     %th
     %th
 
-  - @nodes.each do |node|
+  - @links.each do |link|
     %tr
-      %td= node.source
-      %td= node.target
-      %td= link_to 'Show', node
-      %td= link_to 'Edit', edit_node_path(node)
-      %td= link_to 'Destroy', node, :method => :delete, :data => { :confirm => 'Are you sure?' }
+      %td= link.source
+      %td= link.target
+      %td= link_to 'Show', link
+      %td= link_to 'Edit', edit_link_path(link)
+      %td= link_to 'Destroy', link, :method => :delete, :data => { :confirm => 'Are you sure?' }
 
 %br
 
-- this_is_your_view_helper_method.html_safe
-
-= link_to 'New Node', new_node_path
+= link_to 'New Link', new_link_path
