@@ -1,6 +1,105 @@
 Randomapp::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
+
+  set_trace_func proc { |event, file, line, id, classname, binding| 
+    whitelist = %w(call return)
+    #blacklist = %w(c-call c-return line end class return)
+    #if event != "c-call" && event != "c-return" && event != "line" && event != "end" && event != "class" && event != "return" && file =~ /(app\/.*)/
+    #if file =~ /(app\/.*)/ && blacklist.include?(event) == false
+    #
+    if file =~ /(app\/.*)/ and whitelist.include? event
+      @event = "#{event}"
+      @file = "#{file}"
+      @line = "#{line}"
+      @classname = "#{classname}"
+      #puts classname.methods - Object.methods
+      #@callers = "#{classname.of_caller(2)}"
+      @methods_available = "#{classname.methods - Object.methods}"
+      #@caller_classname = "#{classname.parent}"
+      @instance_values = "#{classname.instance_values}"
+      #@class_binding_list = "{classname.__binding__.pretty_inspect}"
+      @id = "#{id}"
+      defaults = {"binding" => "source"}
+      # @ancestors = "#{classname.ancestors}"
+      # @eval = "#{classname.eval}"    
+      # puts binding.inspect
+      # puts classname.callers
+      # puts classname.callers.map &:frame_description
+      # puts classname
+      # puts binding
+      # puts binding.methods
+      # # puts classname.__binding__.of_caller(0)
+      # puts classname.of_caller(1).of_caller(1).frame_description
+      # puts classname.of_caller(2).of_caller(1).frame_description
+      # puts classname.of_caller(0).frame_description
+      # puts classname.of_caller(1).frame_description
+      # puts classname.of_caller(2).frame_description
+      # puts classname.of_caller(0).frame_count
+      # puts classname.of_caller(1).frame_count
+      # puts classname.of_caller(2).frame_count
+      @method_start = "#{classname.callers[2].frame_description}"
+      @method_return = "#{classname.callers[-2].frame_description}"
+      @binding_parent = "#{binding.parent_name.inspect}"
+      @file_and_line = "#{@file.split("/")[-2]} + / + #{@file.split("/")[-1]} + #{line}"
+      puts @file_and_line
+
+      if @binding == "nil" or @binding == "null"
+        @binding = "rails source"
+      else
+        @binding
+      end
+
+      if @binding_parent == "nil" or @binding_parent == "null"
+        @binding_parent = "rails source"
+      else
+        @binding_parent
+      end
+
+      a = defaults.merge(
+        "event" => @event, 
+        "file" => @file, 
+        "line" => @line, 
+        "classname" => @classname, 
+        "callers" => @callers, 
+        "methods_available" => @methods_available,
+        "class_binding_list" => @class_binding_list, 
+        "instance_values" => @instance_values, 
+        "caller_classname" => @caller_classname,
+        "id" => @id,
+        "binding" => @binding,
+        "ancestors" => @ancestors,
+        "evals" => @eval,
+        "binding_parent" => @binding_parent,
+        "initial_frame_description" => classname.callers[0].frame_description,
+        "initial_frame_type" => classname.callers[0].frame_type,
+        "method_start" => classname.callers[2].frame_description,
+        "method_return" => classname.callers[-2].frame_description,
+        "final_frame_type" => classname.callers[-1].frame_description
+        )
+
+      puts a
+      
+      #binding.pry
+
+      if event == "call"
+        Node.create(:source => @binding_parent, :target => @binding)
+        Node.create(:source => @binding, :target => @file_and_line)
+        Node.create(:source => @file_and_line, :target => @method_start)
+        Node.create(:source => @file_and_line, :target => @method_return)
+      else
+        Node.create(:source => @file_and_line, :target => @binding_parent)
+      end
+
+      Event.create(:event_name => @event,
+                    :file => @file,
+                    :line => @line,
+                    :classname => @classname,
+                    )
+  end
+}
+
+
   # Code is not reloaded between requests
   config.cache_classes = true
 

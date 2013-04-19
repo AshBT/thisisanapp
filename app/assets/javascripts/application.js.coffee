@@ -28,7 +28,7 @@ jQuery ->
     .attr('height', height)
     .append('g')
     .attr("transform", 'translate(40,0)')
-  d3.json("http://localhost:3000/nodes.json", (root, error) ->
+  d3.json("flare.json", (root, error) ->
     console.log root
     console.log error
     nodes = cluster.nodes(root)
