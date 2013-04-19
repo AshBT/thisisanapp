@@ -4,8 +4,8 @@ class NodesController < ApplicationController
   # GET /nodes
   # GET /nodes.json
   def index
-    @links = Node.limit(10)
-    @nodes = Event.limit(10)
+    @links = Node.all     #.limit(10)
+    @nodes = Event.all    #.limit(10)
 
     respond_to do |format|
       format.html # index.html.erb

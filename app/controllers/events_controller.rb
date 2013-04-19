@@ -2,7 +2,7 @@ class EventsController < ApplicationController
   # GET /events
   # GET /events.json
   def index
-    @events = Event.limit(10)
+    @events = Event.all #.limit(10)
 
     respond_to do |format|
       format.html # index.html.erb

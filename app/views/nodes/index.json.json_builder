@@ -1,9 +1,13 @@
-count @node.count
-page @node.current_page
-per_page @node.per_page
-pages_count @node.num_pages
-results @node do |node|
+"links" @node do |node|
   source node.source
   target node.target
   end
+end
+
+"nodes" @event do |event|
+  classname event.classname
+  event_name event.event_name
+  file event.file
+  id event.id
+  line event.line
 end
